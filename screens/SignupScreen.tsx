@@ -2,16 +2,20 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StackParamList } from '../App';
 import { Button, StyleSheet, Text, View, SafeAreaView, Image, TextInput, Pressable } from 'react-native';
-import React, { useEffect } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import * as Google from 'expo-auth-session/providers/google'
 import * as Facebook from 'expo-auth-session/providers/facebook'
 import { ResponseType } from 'expo-auth-session'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Modal from 'react-native-modal';
+
 
 export default function SignupScreen({
   route, navigation,
 }: NativeStackScreenProps<StackParamList, "Signup">) {
  
+
   const [googleRequest, googleResponse, googlePromptAsync] = Google.useAuthRequest({
     expoClientId: '191632874108-c17crjeh8t75495rji8c3dasp2cfvc47.apps.googleusercontent.com',
   })
@@ -86,6 +90,19 @@ export default function SignupScreen({
     })()
   }, [fbResponse])
    
+
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
+  const handleSignin = () => {
+    navigation.navigate('TabNavigator')
+    setModalVisible(false)
+  }
+
   return (
    <SafeAreaView style={styles.container}>
     <View style={styles.upDiv}>
@@ -93,19 +110,36 @@ export default function SignupScreen({
       <Text style={styles.welcome}>Welcome</Text>
     </View>
     <View>
+
       <TextInput
-      placeholder='FirstName' style={styles.textInput}>
+              onChangeText={(value : string)=> setFirstName(value)}
+              value={firstName}
+              placeholder='FirstName' style={styles.textInput}>
       </TextInput>
+
       <TextInput
-      placeholder='LastName'>
+              onChangeText={(value: string)=> setLastName(value)}
+              value={lastName}
+              placeholder='LastName'>
       </TextInput>
+
+      <TextInput 
+              onChangeText={(value: string)=> setEmail(value)}
+              value={email}
+              placeholder='Email'>
+      </TextInput>
+
       <TextInput
-      placeholder='Email'>
+              onChangeText={(value: string)=> setPassword(value)}
+              value={password}
+              placeholder='Password'>
       </TextInput>
-      <TextInput
-      placeholder='Password'>
-      </TextInput>
-      <Pressable style={styles.button}>
+
+      <Pressable 
+      style={styles.button}
+      onPress={() => navigation.navigate('TabNavigator')}
+      >
+
         <Text style={styles.textButton}>Sign-Up</Text>
       </Pressable>
     </View>
@@ -122,6 +156,34 @@ export default function SignupScreen({
       
      </View>
     </View>
+
+    <View>
+      <Text>Already have an account ?</Text>
+    <Pressable
+      style={styles.button}
+      onPress={() => {setModalVisible(true)}}
+      >
+        <Text style={styles.textButton}>Sign-In</Text>
+      </Pressable>
+      </View>
+      <View>
+        <Modal
+          backdropOpacity={0.3}
+          isVisible={modalVisible}
+          onBackdropPress={() => setModalVisible(false)}
+          style={styles.contentView}
+        >
+          <View style={styles.content}>
+            <Text style={styles.contentTitle}>Welcome Back!</Text>
+            <Pressable 
+      style={styles.button}
+      onPress={() => handleSignin()}
+      >
+        <Text style={styles.textButton}>Sign-In</Text>
+      </Pressable>
+          </View>
+        </Modal>
+      </View>
    </SafeAreaView>
  );
 }
@@ -177,6 +239,7 @@ textAlignVertical: 'top',
 letterSpacing: 0.1,
 */
 },
+
 socialLogin: {
   flexDirection: 'row',
   justifyContent: 'space-around',
@@ -185,6 +248,21 @@ socialLogin: {
 },
 socialContainer: {
   alignItems: 'center'
-}
-
+},
+content: {
+  backgroundColor: 'white',
+  padding: 22,
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderTopRightRadius: 17,
+  borderTopLeftRadius: 17,
+},
+contentTitle: {
+  fontSize: 20,
+  marginBottom: 12,
+},
+contentView: {
+  justifyContent: 'flex-end',
+  margin: 0,
+},
 });

@@ -1,15 +1,15 @@
+import React from "react";
+import { NativeBaseProvider, Box, } from "native-base";
 
-import { Button, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import AppBar from "../components/AppBar";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 
 export default function ContactScreen() {
- return (
-   <View>
-     <Text>Contact Screen</Text>
-     <Button
-       title="Go to Home"
-       
-     />
-   </View>
- );
+  
+  return (
+  <>
+  <AppBar screenName="Contacts"/>
+  </>
+  );
 }
